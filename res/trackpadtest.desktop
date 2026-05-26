@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=trackpadtest
+Exec=trackpadtest %F
+TryExec=trackpadtest
+Type=Application
+Icon=trackpadtest
+Categories=Utility

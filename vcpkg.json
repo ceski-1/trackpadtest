@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "dependencies": [
+    {
+      "name": "sdl3",
+      "default-features": false,
+      "features": [
+        {
+          "name": "dbus",
+          "platform": "linux"
+        },
+        {
+          "name": "ibus",
+          "platform": "linux"
+        },
+        "vulkan",
+        {
+          "name": "wayland",
+          "platform": "linux"
+        },
+        {
+          "name": "x11",
+          "platform": "linux"
+        }
+      ]
+    }
+  ]
+}
