@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF 1db2b71ef0695e4c1e2135ccffa639f06c8e86b6
-    SHA512 2be2bd5c675422ac76a8367387af024acb82361255d7894db077c055dc767acc12e340d3b46412f2e3eda6b4e7ecbb34069488397a1b726db6b3c7b242f08963
+    REF 787394e6e4ed7544dd7578adee05f7ac8cef8068
+    SHA512 7ff0f426357bb3cfcec79492678b4261631bf2006fdbccb23606f9733562193dd1c818d1c6bf3d3ef8a66ae52726ac2bb4e725b12cc2fb4d236873a19be80e69
     HEAD_REF main
     PATCHES
         fix-freebsd.patch
@@ -29,6 +29,13 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
             emscripten-pthreads     SDL_PTHREADS
     )
     vcpkg_list(APPEND FEATURE_OPTIONS "${EMSCRIPTEN_FEATURE_OPTIONS}")
+endif()
+
+if ("macos-keyboard-grab" IN_LIST FEATURES)
+    # SDL only disables the system shortcuts in SDL_SetWindowKeyboardGrab() on
+    # macOS if SDL_MAC_NO_SANDBOX is defined
+    string(APPEND VCPKG_C_FLAGS " -DSDL_MAC_NO_SANDBOX")
+    string(APPEND VCPKG_CXX_FLAGS " -DSDL_MAC_NO_SANDBOX")
 endif()
 
 if ("x11" IN_LIST FEATURES)
@@ -63,24 +70,9 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
-        -DSDL_TEST_LIBRARY=OFF
-        -DSDL_TESTS=OFF
-        -DSDL_X11_XSCRNSAVER=OFF
         -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
         # Specifying the revision skips the need to use git to determine a version
         -DSDL_REVISION=vcpkg
-        -DSDL_AUDIO=OFF
-        -DSDL_CAMERA=OFF
-        -DSDL_DIALOG=OFF
-        -DSDL_GPU=OFF
-        -DSDL_HAPTIC=OFF
-        -DSDL_OFFSCREEN=OFF
-        -DSDL_POWER=OFF
-        -DSDL_RENDER=ON
-        -DSDL_SENSOR=OFF
-        -DSDL_TRAY=OFF
-        -DSDL_VIDEO=ON
-        -DSDL_VIRTUAL_JOYSTICK=OFF
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
 )
@@ -97,6 +89,13 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt"
-    COMMENT "Some configurations may use code licensed under the MIT and Apache-2.0 licenses."
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/src/hidapi/LICENSE-bsd.txt"
+        "${SOURCE_PATH}/src/video/stb_image.h"
+        "${SOURCE_PATH}/src/video/yuv2rgb/LICENSE"
+        "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2.h"
+        "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2platform.h"
+    COMMENT "SDL_opengles2_gl2platform.h is licensed under Apache-2.0; see https://www.apache.org/licenses/LICENSE-2.0."
 )

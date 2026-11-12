@@ -13,7 +13,7 @@ Windows and Linux binaries are provided on the [Releases](https://github.com/ces
 Requirements:
 
 - [CMake](https://cmake.org) (3.16 or later)
-- [SDL3](https://github.com/libsdl-org/SDL) (3.5.0 or later)
+- [SDL3](https://github.com/libsdl-org/SDL) (3.4.20 or later)
 
 For Windows, [vcpkg](https://github.com/microsoft/vcpkg) is recommended. For Linux, use the libraries provided by your distribution.
 
